@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "_comment": " remove dev line 7 before deployed in vercel",
-    "dev":"nodemon index.js", 
-    "start":"node index.js",
+    "dev": "nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.12.0"
   }
 }

@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config(); // Load environment variables from .env file
+const jwt = require('jsonwebtoken');
 
 // Initialize the app
 const app = express();
@@ -40,11 +41,34 @@ async function run() {
 
 
         //adding path here
+    
 
       app.get('/api',(req,res)=>{
         res.send('Welcome to test api..... of')
     })
 
+    const secret=process.env.JWT_Secret
+    //adding jwt token
+
+    app.post('/jwt',(req,res)=>{
+
+      console.log(req.query)
+
+      const {email} =req.query;
+
+      if (!email) {
+        return res.status(400).json({ error: 'Username is required' });
+      }
+    
+      // Payload for the token
+      const payload = { email };
+    
+      // Generate the token (expires in 1 hour)
+      const token = jwt.sign(payload, secret, { expiresIn: '24h' });
+    console.log(token)
+      res.json({ token });
+
+    })
 
     } finally {
      // await client.close();
