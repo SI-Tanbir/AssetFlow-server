@@ -20,6 +20,7 @@ const dbPass = process.env.DB_PASS;
 const uri = `mongodb+srv://${dbUser}:${dbPass}@cluster0.o9sii.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 
+
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const client = new MongoClient(uri, {
   serverApi: {
@@ -29,6 +30,8 @@ const client = new MongoClient(uri, {
   }
 });
 
+//adding database collection name here
+const hrCollection=client.db('AssetFlow').collection('hr')
 
 
 //testing and run connection
@@ -48,6 +51,8 @@ async function run() {
     })
 
     const secret=process.env.JWT_Secret
+
+
     //adding jwt token
 
     app.post('/jwt',(req,res)=>{
@@ -69,6 +74,43 @@ async function run() {
       res.json({ token });
 
     })
+
+    //checking the the if this email is admin;
+    app.post('/admin', async (req, res) => {
+      try {
+        const email = req.body.email; // Get email from request body
+        console.log('Requested email:', email);
+    
+        // Find documents with matching email
+        const result = await hrCollection.find({ email }).toArray();
+    
+        if (result.length === 0) {
+          // No matching email found
+          console.log("it from failed on")
+          return res.send({ isAdmin:false });
+        }
+        
+        // console.log("cheking shaik asumsion",result.email)
+        // Assuming only one document is expected for the given email
+        const expectedEmail = result[0].email; // Access the first document's email
+        // console.log('Matched email:', expectedEmail);
+    
+        if(expectedEmail === email){
+          console.log("suuceesed")
+          return res.send({isAdmin:true}
+
+           
+          )
+        }
+        res.send("not matched");
+      } catch (err) {
+        console.error('Error:', err.message);
+        res.status(500).send('Server error');
+      }
+    });
+    
+
+
 
     } finally {
      // await client.close();
