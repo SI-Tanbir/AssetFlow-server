@@ -31,7 +31,19 @@ const client = new MongoClient(uri, {
 });
 
 //adding database collection name here
-const hrCollection=client.db('AssetFlow').collection('hr')
+const hrCollection=client.db('AssetFlow').collection
+('hr')
+const assetsCollection=client.db('AssetFlow').collection
+('assetlist')
+
+const pendingEmployeeCollection=client.db('AssetFlow').collection
+('pendingEmployee')
+
+const employeeCollection=client.db('AssetFlow').collection
+('employee')
+
+const allRequest=client.db('AssetFlow').collection
+('request')
 
 
 //testing and run connection
@@ -108,6 +120,67 @@ async function run() {
         res.status(500).send('Server error');
       }
     });
+
+    //showing all assets list
+    app.get('/assets',async(req,res)=>{
+
+      
+      const result=await assetsCollection.find().toArray()
+      console.log(result)
+      res.send(result)
+
+    })
+
+    //pending employee list
+    app.get('/pending-employee',async(req,res)=>{
+
+      
+      const result=await pendingEmployeeCollection.find().toArray()
+      console.log(result)
+      res.send(result)
+
+    })
+
+    //employee list 
+    app.get('/employee',async(req,res)=>{
+
+      
+      const result=await employeeCollection.find().toArray()
+      // console.log(result)
+      res.send(result)
+
+    })
+
+
+
+    //adding assets list 
+    app.post('/addassets',async(req,res)=>{
+
+      const data =req.body
+      console.log(data)
+      if(!data){
+
+       return res.send('data is not given')
+      }
+
+      const result =await assetsCollection.insertOne(data)
+      console.log(result)
+      res.send(result)
+    })
+
+    //request item path
+
+
+    
+app.get('/request-items',async(req,res)=>{
+
+      
+      const result=await allRequest.find().toArray()
+      console.log('request items get',result)
+      res.send(result)
+
+    })
+
     
 
 
